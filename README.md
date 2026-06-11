@@ -20,7 +20,8 @@ jingcai-football/
 ├── SKILL.md                  # 主流程(模型的入口,含环境能力降级表)
 ├── jingcai-单文件提示词版.md   # 合并版,直接粘给ChatGPT/DeepSeek/Gemini等对话产品
 ├── automation/
-│   └── weekly_jingcai.py     # 周任务: 周五自动分析 + 周一自动复盘(零依赖)
+│   ├── weekly_jingcai.py     # 周任务: 周五自动分析 + 周一自动复盘(零依赖)
+│   └── DEPLOY.md             # 定时任务部署指南(crontab/时区/密钥/告警/使用纪律)
 ├── references/
 │   ├── rules.md              # 竞彩五大玩法规则、串关、SP水位
 │   ├── analysis.md           # 分析框架与概率估计方法

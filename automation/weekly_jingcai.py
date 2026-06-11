@@ -16,9 +16,24 @@
 import json
 import os
 import sys
+import urllib.parse
 import urllib.request
 from datetime import date, datetime
 from pathlib import Path
+
+
+def load_env():
+    """加载脚本同目录下的 .env(KEY=VALUE 格式), 已有环境变量优先"""
+    env_file = Path(__file__).resolve().parent / ".env"
+    if env_file.exists():
+        for line in env_file.read_text(encoding="utf-8").splitlines():
+            line = line.strip()
+            if line and not line.startswith("#") and "=" in line:
+                k, _, v = line.partition("=")
+                os.environ.setdefault(k.strip(), v.strip())
+
+
+load_env()
 
 # ===================== 配置 =====================
 WORKDIR = Path(os.environ.get("JC_WORKDIR", r"F:\workspace\jingcai"))
@@ -187,11 +202,17 @@ def task_review():
 
 
 if __name__ == "__main__":
-    import urllib.parse  # for push_wechat
     cmd = sys.argv[1] if len(sys.argv) > 1 else ""
-    if cmd == "analyze":
-        task_analyze()
-    elif cmd == "review":
-        task_review()
-    else:
-        print(__doc__)
+    try:
+        if cmd == "analyze":
+            task_analyze()
+        elif cmd == "review":
+            task_review()
+        else:
+            print(__doc__)
+    except Exception as e:
+        # 失败告警: 定时任务最怕静默失败
+        msg = f"任务[{cmd}]异常: {type(e).__name__}: {e}"
+        print(f"[!] {msg}", file=sys.stderr)
+        push_wechat(f"竞彩任务失败 {date.today().isoformat()}", msg)
+        sys.exit(1)
