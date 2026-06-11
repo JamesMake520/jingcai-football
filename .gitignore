@@ -1,0 +1,8 @@
+# 个人数据不入库
+records.json
+reports/
+raw_api.json
+*.skill
+__pycache__/
+*.pyc
+.env
